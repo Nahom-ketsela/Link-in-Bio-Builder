@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { auth, db } from '../firebase'
-import { onAuthStateChanged } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
+import { db } from '../firebase'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { useAuth } from '../context/AuthContext'
 
 const socialPlatforms = [
     { id: 'instagram', label: 'Instagram', placeholder: 'yourusername' },
@@ -23,18 +23,21 @@ const baseUrls = {
 }
 
 const Dashboard = () => {
-    const [user, setUser] = useState(null)
+    const { user, loading } = useAuth()
+    const navigate = useNavigate()
+
     const [username, setUsername] = useState('')
     const [rawLinks, setRawLinks] = useState({})
     const [links, setLinks] = useState({})
-    const [loading, setLoading] = useState(true)
-    const navigate = useNavigate()
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (currentUser) {
-                setUser(currentUser)
-                const docRef = doc(db, 'users', currentUser.uid)
+        if (!loading && !user) {
+            navigate('/auth')
+        }
+
+        const fetchData = async () => {
+            if (user) {
+                const docRef = doc(db, 'users', user.uid)
                 const snap = await getDoc(docRef)
                 if (snap.exists()) {
                     const data = snap.data()
@@ -48,14 +51,11 @@ const Dashboard = () => {
                     })
                     setLinks(data.links || {})
                 }
-            } else {
-                navigate('/auth')
             }
-            setLoading(false)
-        })
+        }
 
-        return () => unsubscribe()
-    }, [])
+        fetchData()
+    }, [user, loading])
 
     const extractUsername = (url, platform) => {
         if (!url) return ''
