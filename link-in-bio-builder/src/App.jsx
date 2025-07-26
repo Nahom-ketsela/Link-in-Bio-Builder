@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import PublicProfile from './pages/PublicProfile'
 import Auth from './pages/Auth'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/:username" element={<PublicProfile />} />
         </Routes>
       </div>
+      <Footer />
     </>
   )
 }
