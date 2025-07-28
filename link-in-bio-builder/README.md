@@ -1,12 +1,106 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🌐 ShareIt.bio
 
-Currently, two official plugins are available:
+All your social links. One sleek page. Share it everywhere.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Overview
 
-## Expanding the ESLint configuration
+**ShareIt.bio** is a modern, responsive link-in-bio builder built using React, Tailwind CSS, and Firebase. It allows users to create a single customizable profile page with links to their social media accounts — perfect for creators, professionals, and businesses.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+---
+
+## 🚀 Features
+
+- 🔐 Authentication (Register / Login)
+- 🧑‍💼 Dashboard to customize username, theme, font, and social links
+- 🎨 Live preview of your bio page
+- 📱 Supports Instagram, TikTok, Facebook, Twitter, Telegram, WhatsApp
+- 🔗 Public shareable profile
+- ☁️ Firebase Authentication + Firestore Database
+- 📱 Fully responsive + mobile-first UI
+- ⚙️ Protected routes with dynamic user sessions
+
+---
+
+## 🛠 Tech Stack
+
+- **React** – Frontend Framework
+- **Tailwind CSS** – Utility-first CSS for design
+- **Firebase** – Auth & Firestore for backend
+- **React Router** – Routing
+- **React Icons** – Platform icons
+
+---
+
+## 📦 Setup Instructions
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Nahom-ketsela/Link-in-Bio-Builder.git
+   cd Link-in-Bio-Builder
+
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Firebase Configuration**
+
+   * Create a Firebase project
+   * Enable **Authentication** (Email/Password)
+   * Create a **Firestore Database**
+   * Inside the root, create a `.env.local` file:
+
+     ```
+     VITE_API_KEY=your_firebase_api_key
+     VITE_AUTH_DOMAIN=your_auth_domain
+     VITE_PROJECT_ID=your_project_id
+     VITE_STORAGE_BUCKET=your_storage_bucket
+     VITE_MESSAGING_SENDER_ID=your_sender_id
+     VITE_APP_ID=your_app_id
+     ```
+
+4. **Run the app**
+
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📁 Folder Structure
+
+```
+src/
+├── components/       # Navbar, Footer, etc.
+├── context/          # Auth context
+├── pages/            # Auth, Dashboard, PublicProfile, Home
+├── firebase.js       # Firebase config
+├── App.jsx           # Main app routes
+└── index.css         # Tailwind base styles
+```
+
+---
+
+
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
+
+---
+
+## 📃 License
+
+[MIT](LICENSE)
+
+---
+
+## 🧠 Inspiration
+
+Inspired by platforms like [Linktree](https://linktr.ee/) but built with simplicity, performance, and customization in mind.
+
+
+
