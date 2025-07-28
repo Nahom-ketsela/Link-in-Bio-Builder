@@ -53,7 +53,7 @@ const PublicProfile = () => {
     }, [username]);
 
     const handleShare = () => {
-        const profileUrl = `${window.location.origin}/user/${username}`;
+        const profileUrl = `${window.location.origin}/${username}`;
         navigator.clipboard.writeText(profileUrl)
             .then(() => {
                 alert('Profile link copied to clipboard!');

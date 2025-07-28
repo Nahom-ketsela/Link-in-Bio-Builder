@@ -36,7 +36,7 @@ const Auth = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
+        <div className="min-h-screen flex items-center justify-center  px-4">
             <div className="max-w-4xl w-full bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row transition-all">
                 {/* Left Panel */}
                 <div className="hidden md:block md:w-1/2 bg-blue-600 text-white p-8 flex items-center justify-center">
