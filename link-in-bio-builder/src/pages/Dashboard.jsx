@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db, storage } from '../firebase'; // Ensure storage is imported
+import { db, storage } from '../firebase'; 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import storage functions
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
 import { useAuth } from '../context/AuthContext';
 
 const socialPlatforms = [
@@ -16,9 +16,9 @@ const socialPlatforms = [
 
 const themes = [
     { id: 'light', label: 'Light', background: 'bg-white', text: 'text-black' },
-    { id: 'dark', label: 'Dark', background: 'bg-gray-800', text: 'text-white' },
+    { id: 'dark', label: 'Dark', background: 'bg-gray-800', text: 'text-black' },
     { id: 'blue', label: 'Blue', background: 'bg-blue-100', text: 'text-blue-800' },
-    { id: 'green', label: 'Green', background: 'bg-green-100', text: 'text-green-800' }
+    { id: 'green', label: 'Green', background: 'bg-green-100', text: 'text-green-800' } 
 ];
 
 const fonts = [
@@ -28,6 +28,15 @@ const fonts = [
     { id: 'cursive', label: 'Cursive' },
     { id: 'fantasy', label: 'Fantasy' }
 ];
+
+const baseUrls = {
+    instagram: 'https://www.instagram.com/',
+    tiktok: 'https://www.tiktok.com/@',
+    facebook: 'https://www.facebook.com/',
+    twitter: 'https://twitter.com/',
+    telegram: 'https://t.me/',
+    whatsapp: 'https://wa.me/',
+};
 
 const Dashboard = () => {
     const { user, loading } = useAuth();
@@ -40,8 +49,8 @@ const Dashboard = () => {
     const [file, setFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [selectedTheme, setSelectedTheme] = useState('light'); // Default theme for profile
-    const [selectedFont, setSelectedFont] = useState('sans-serif'); // Default font for profile
+    const [selectedTheme, setSelectedTheme] = useState('light'); 
+    const [selectedFont, setSelectedFont] = useState('sans-serif'); 
 
     useEffect(() => {
         if (!loading && !user) {
@@ -66,8 +75,8 @@ const Dashboard = () => {
                         });
                         setLinks(data.links || {});
                         setProfilePic(data.profilePic || '');
-                        setSelectedTheme(data.theme || 'light'); // Set theme from database
-                        setSelectedFont(data.font || 'sans-serif'); // Set font from database
+                        setSelectedTheme(data.theme || 'light');
+                        setSelectedFont(data.font || 'sans-serif');
                     }
                 } catch (err) {
                     setError('Failed to fetch user data.');
@@ -127,8 +136,8 @@ const Dashboard = () => {
                 username: username.trim(),
                 links,
                 profilePic,
-                theme: selectedTheme, // Save selected theme
-                font: selectedFont // Save selected font
+                theme: selectedTheme,
+                font: selectedFont
             });
             alert('Profile saved!');
         } catch (err) {

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Helmet } from 'react-helmet'; // Import Helmet for SEO
+import { Helmet } from 'react-helmet'; 
 
 const socialPlatforms = {
     instagram: 'Instagram',
@@ -44,7 +44,7 @@ const PublicProfile = () => {
     }, [username]);
 
     const handleShare = () => {
-        const profileUrl = `http://localhost:5173/${username}`; // Replace with your actual base URL
+        const profileUrl = `http://localhost:5173/${username}`; 
         navigator.clipboard.writeText(profileUrl)
             .then(() => {
                 alert('Profile link copied to clipboard!');
@@ -58,7 +58,7 @@ const PublicProfile = () => {
     if (notFound) return <div className="p-6 text-red-600">User not found 😢</div>;
 
     // Apply theme and font styles
-    const themeClasses = profile.theme === 'dark' ? 'bg-gray-800 text-white' : 
+    const themeClasses = profile.theme === 'dark' ? 'bg-gray-800 text-black' : 
                           profile.theme === 'blue' ? 'bg-blue-100 text-blue-800' : 
                           'bg-gray-50 text-black';
 
