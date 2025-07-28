@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db, storage } from '../firebase'; 
+import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
 import { useAuth } from '../context/AuthContext';
+import { UserCircleIcon, ShareIcon } from '@heroicons/react/24/solid';
+import { FaInstagram, FaTiktok, FaFacebook, FaTwitter, FaTelegram, FaWhatsapp } from 'react-icons/fa';
 
 const socialPlatforms = [
-    { id: 'instagram', label: 'Instagram', placeholder: 'yourusername' },
-    { id: 'tiktok', label: 'TikTok', placeholder: '@yourname' },
-    { id: 'facebook', label: 'Facebook', placeholder: 'yourname' },
-    { id: 'twitter', label: 'Twitter', placeholder: 'yourhandle' },
-    { id: 'telegram', label: 'Telegram', placeholder: 'yourchannel' },
-    { id: 'whatsapp', label: 'WhatsApp', placeholder: '251912345678' }
+    { id: 'instagram', label: 'Instagram', placeholder: 'yourusername', icon: <FaInstagram className="inline mr-2" /> },
+    { id: 'tiktok', label: 'TikTok', placeholder: '@yourname', icon: <FaTiktok className="inline mr-2" /> },
+    { id: 'facebook', label: 'Facebook', placeholder: 'yourname', icon: <FaFacebook className="inline mr-2" /> },
+    { id: 'twitter', label: 'Twitter', placeholder: 'yourhandle', icon: <FaTwitter className="inline mr-2" /> },
+    { id: 'telegram', label: 'Telegram', placeholder: 'yourchannel', icon: <FaTelegram className="inline mr-2" /> },
+    { id: 'whatsapp', label: 'WhatsApp', placeholder: '251912345678', icon: <FaWhatsapp className="inline mr-2" /> }
 ];
 
 const themes = [
     { id: 'light', label: 'Light', background: 'bg-white', text: 'text-black' },
-    { id: 'dark', label: 'Dark', background: 'bg-gray-800', text: 'text-black' },
+    { id: 'dark', label: 'Dark', background: 'bg-gray-800', text: 'text-white' },
     { id: 'blue', label: 'Blue', background: 'bg-blue-100', text: 'text-blue-800' },
-    { id: 'green', label: 'Green', background: 'bg-green-100', text: 'text-green-800' } 
+    { id: 'green', label: 'Green', background: 'bg-green-100', text: 'text-green-800' }
 ];
 
 const fonts = [
@@ -35,7 +36,7 @@ const baseUrls = {
     facebook: 'https://www.facebook.com/',
     twitter: 'https://twitter.com/',
     telegram: 'https://t.me/',
-    whatsapp: 'https://wa.me/',
+    whatsapp: 'https://wa.me/'
 };
 
 const Dashboard = () => {
@@ -45,17 +46,13 @@ const Dashboard = () => {
     const [username, setUsername] = useState('');
     const [rawLinks, setRawLinks] = useState({});
     const [links, setLinks] = useState({});
-    const [profilePic, setProfilePic] = useState('');
-    const [file, setFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [selectedTheme, setSelectedTheme] = useState('light'); 
-    const [selectedFont, setSelectedFont] = useState('sans-serif'); 
+    const [selectedTheme, setSelectedTheme] = useState('light');
+    const [selectedFont, setSelectedFont] = useState('sans-serif');
 
     useEffect(() => {
-        if (!loading && !user) {
-            navigate('/auth');
-        }
+        if (!loading && !user) navigate('/auth');
 
         const fetchData = async () => {
             if (user) {
@@ -74,7 +71,6 @@ const Dashboard = () => {
                             return raw;
                         });
                         setLinks(data.links || {});
-                        setProfilePic(data.profilePic || '');
                         setSelectedTheme(data.theme || 'light');
                         setSelectedFont(data.font || 'sans-serif');
                     }
@@ -102,40 +98,18 @@ const Dashboard = () => {
         setLinks({ ...links, [platform]: fullLink });
     };
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-    };
-
-    const handleUpload = async () => {
-        if (!file) {
-            setError('Please select a file to upload.');
-            return;
-        }
-
-        const storageRef = ref(storage, `avatars/${file.name}`);
-        try {
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            setProfilePic(downloadURL);
-            setError('');
-        } catch (uploadError) {
-            setError('Failed to upload avatar.');
-        }
-    };
-
     const saveProfile = async () => {
         if (!username.trim()) {
             setError('Username is required.');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             const docRef = doc(db, 'users', user.uid);
             await setDoc(docRef, {
                 username: username.trim(),
                 links,
-                profilePic,
                 theme: selectedTheme,
                 font: selectedFont
             });
@@ -147,14 +121,15 @@ const Dashboard = () => {
         }
     };
 
+    const shareProfileUrl = `${window.location.origin}/${username}`;
+
     if (loading || isLoading) return <div className="p-6">Loading...</div>;
 
     return (
         <div className="flex flex-col md:flex-row gap-6 p-6 bg-gray-100">
-            {/* Form Panel */}
-            <div className="w-full md:w-1/2 rounded shadow p-6 bg-white">
-                <h2 className="text-2xl font-bold mb-4">Edit Your Profile</h2>
-                
+            <div className="w-full md:w-1/2 rounded-xl shadow-lg p-6 bg-white">
+                <h2 className="text-2xl font-bold mb-6">Edit Your Profile</h2>
+
                 {error && <div className="mb-4 text-red-600">{error}</div>}
 
                 <label className="block mb-2 font-medium">Username</label>
@@ -163,22 +138,12 @@ const Dashboard = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="yourname"
-                    className="w-full p-3 border rounded mb-4 focus:outline-none border-gray-300"
+                    className="w-full p-3 border rounded mb-6 focus:outline-none border-gray-300"
                 />
 
-                {/* Avatar Upload */}
-                <div className="mb-4">
-                    <label className="block mb-1">Upload Avatar</label>
-                    <input type="file" onChange={handleFileChange} className="mb-2" />
-                    <button onClick={handleUpload} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Upload</button>
-                    {profilePic && (
-                        <img src={profilePic} alt="Profile Avatar" className="w-24 h-24 rounded-full my-4" />
-                    )}
-                </div>
-
-                {socialPlatforms.map(({ id, label, placeholder }) => (
+                {socialPlatforms.map(({ id, label, placeholder, icon }) => (
                     <div key={id} className="mb-4">
-                        <label className="block mb-1">{label}</label>
+                        <label className="block mb-1">{icon}{label}</label>
                         <input
                             type="text"
                             value={rawLinks[id] || ''}
@@ -219,32 +184,39 @@ const Dashboard = () => {
                 </button>
             </div>
 
-            {/* Live Preview */}
-            <div className={`w-full md:w-1/2 p-4 rounded shadow ${themes.find(theme => theme.id === selectedTheme).background}`}>
-                <h2 className={`text-2xl font-bold mb-4 text-center ${themes.find(theme => theme.id === selectedTheme).text}`}>Live Preview</h2>
+            <div className={`w-full md:w-1/2 p-6 rounded-xl shadow-lg ${themes.find(theme => theme.id === selectedTheme).background}`}>
+                <h2 className={`text-2xl font-bold mb-6 text-center ${themes.find(theme => theme.id === selectedTheme).text}`}>
+                    Live Preview
+                </h2>
 
-                <div className="flex flex-col items-center" style={{ fontFamily: selectedFont }}>
-                    <div className="w-24 h-24 rounded-full bg-gray-300 mb-2" style={{ backgroundImage: `url(${profilePic})`, backgroundSize: 'cover' }} />
-                    <h3 className={`text-lg font-semibold mb-4 ${themes.find(theme => theme.id === selectedTheme).text}`}>@{username || 'username'}</h3>
-                    <div className="w-full space-y-3">
-                        {socialPlatforms.map(({ id, label }) =>
+                <div className="flex flex-col items-center gap-4" style={{ fontFamily: selectedFont }}>
+                    <UserCircleIcon className="w-20 h-20 text-gray-400" />
+                    <h3 className={`text-xl font-semibold ${themes.find(theme => theme.id === selectedTheme).text}`}>
+                        @{username || 'username'}
+                    </h3>
+
+                    <div className="w-full space-y-3 mt-4">
+                        {socialPlatforms.map(({ id, label, icon }) =>
                             links[id] ? (
                                 <a
                                     key={id}
                                     href={links[id]}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="block bg-white text-center px-4 py-3 rounded-xl shadow hover:bg-gray-100 transition"
+                                    className="flex items-center gap-2 bg-white text-center px-4 py-3 rounded-xl shadow hover:bg-gray-100 transition justify-center"
                                 >
-                                    {label}
+                                    {icon}{label}
                                 </a>
-                            ) : (
-                                <div key={id} className="block bg-gray-200 text-center px-4 py-3 rounded-xl">
-                                    {label} (link not added)
-                                </div>
-                            )
+                            ) : null
                         )}
                     </div>
+
+                    <button
+                        onClick={() => navigator.clipboard.writeText(shareProfileUrl)}
+                        className="mt-6 flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        <ShareIcon className="w-5 h-5" /> Share Profile
+                    </button>
                 </div>
             </div>
         </div>
